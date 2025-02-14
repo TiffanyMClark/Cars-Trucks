@@ -4,19 +4,16 @@ import Truck from "./Truck.js";
 import Car from "./Car.js";
 import Motorbike from "./Motorbike.js";
 import Wheel from "./Wheel.js";
-
 // define the Cli class
 class Cli {
   //  updated the vehicles property to accept Truck and Motorbike objects used union | operator
   vehicles: (Car | Truck | Motorbike)[];
   selectedVehicleVin: string | undefined;
   exit: boolean = false;
-
-  // the constructor creates the array.
+  // TODO: Update the constructor to accept Truck and Motorbike objects as well
   constructor(vehicles: (Car | Truck | Motorbike)[]) {
     this.vehicles = vehicles;
   }
-
   // static method to generate a vin
   static generateVin(): string {
     // return a random string
@@ -25,7 +22,6 @@ class Cli {
       Math.random().toString(36).substring(2, 15)
     );
   }
-
   // method to choose a vehicle from existing vehicles
   chooseVehicle(): void {
     inquirer
@@ -49,7 +45,6 @@ class Cli {
         this.performActions();
       });
   }
-
   // method to create a vehicle
   createVehicle(): void {
     inquirer
@@ -58,12 +53,13 @@ class Cli {
           type: "list",
           name: "vehicleType",
           message: "Select a vehicle type",
-          // array choices for the prompts
+          // TODO: Update the choices array to include Truck and Motorbike
           choices: ["Car", "Truck", "Motorbike"],
         },
       ])
       .then((answers) => {
         if (answers.vehicleType === "Car") {
+          // create a car
           this.createCar();
         } else if (answers.vehicleType === "Truck") {
           this.createTruck();
@@ -127,7 +123,6 @@ class Cli {
         this.performActions();
       });
   }
-
   // method to create a truck
   createTruck(): void {
     inquirer
@@ -243,6 +238,11 @@ class Cli {
           name: "rearWheelBrand",
           message: "Enter Rear Wheel Brand",
         },
+        {
+          type: "input",
+          name: "wheelie",
+          message: "can you do a wheelie?",
+        },
       ])
       .then((answers) => {
         // reusing so it will all match with the Motorbike constructor
@@ -254,6 +254,7 @@ class Cli {
           parseInt(answers.year),
           parseInt(answers.weight),
           parseInt(answers.topSpeed),
+
           []
         );
         // push motorbike to the array
@@ -286,7 +287,6 @@ class Cli {
         // TODO: if it is not, tow the selected vehicle then perform actions on the truck to allow the user to select another action
       });
   }
-
   // method to perform actions on a vehicle
   performActions(): void {
     inquirer
@@ -307,12 +307,42 @@ class Cli {
             "Reverse",
             "Select or create another vehicle",
             "Need a tow?",
-            "wheelie?",
+            "Can you do a wheelie??",
             "Exit",
           ],
         },
       ])
       .then((answers) => {
+        if (answers.action === "Can you do a wheelie??") {
+          if (this.selectedVehicleVin) {
+            const selectedVehicle = this.vehicles.find(
+              (vehicle) => vehicle.vin === this.selectedVehicleVin
+            );
+            if (selectedVehicle instanceof Motorbike) {
+              inquirer
+                .prompt([
+                  {
+                    type: "confirm",
+                    name: "canWheelie",
+                    message: "Can the motorbike do a wheelie?",
+                    default: false,
+                  },
+                ])
+                .then((wheelieAnswer) => {
+                  if (wheelieAnswer.canWheelie) {
+                    console.log("The motorbike can do a wheelie!");
+                  } else {
+                    console.log("The motorbike cannot do a wheelie.");
+                  }
+                  this.performActions();
+                });
+            } else {
+              console.log("You can't do a wheelie with that.");
+              this.performActions();
+            }
+          }
+          return;
+        }
         // perform the selected action
         if (answers.action === "Print details") {
           // find the selected vehicle and print its details
@@ -387,7 +417,6 @@ class Cli {
         }
       });
   }
-
   // method to start the cli
   startCli(): void {
     inquirer
@@ -410,6 +439,5 @@ class Cli {
       });
   }
 }
-
 // export the Cli class
 export default Cli;

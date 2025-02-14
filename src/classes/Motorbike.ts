@@ -34,7 +34,7 @@ class Motorbike extends Vehicle {
     this.year = year;
     this.weight = weight;
     this.topSpeed = topSpeed;
-    // TODO: The constructor should check if the wheels array has 2 elements and create 2 new default Wheel objects if it does not
+    //  constructor checks the wheels array for 2 elements and create 2 new default Wheel objects if it does not
     if (wheels.length !== 2) {
       this.wheels = [new Wheel(), new Wheel()];
     } else {
@@ -42,9 +42,9 @@ class Motorbike extends Vehicle {
     }
   }
   //  Implemented the wheelie method?
-  // okay so that should be a void for the wheelie like the createvehicle. ${this.make and modle should do that with this message.}
+  // okay so that should be a void for the wheelie like the create vehicle. ${this.make and model should do that with this message.}
   wheelie(): void {
-    console.log("Motorbike ${this.make} ${this.model} is doing a wheelie!");
+    console.log(`Motorbike ${this.make} ${this.model} is doing a wheelie!`);
   }
 
   // Overriding the printDetails method from the Vehicle class
