@@ -194,20 +194,47 @@ class Cli {
       .prompt([
         {
           type: "list",
-          name: "vehicleToTow",
-          message: "Select a vehicle to tow",
-          choices: this.vehicles.map((vehicle) => ({
-            name: `${vehicle.vin} -- ${vehicle.make} ${vehicle.model}`,
-            value: vehicle,
-          })),
+          name: "selectedTruckVin",
+          message: "Select a truck to tow a vehicle",
+          choices: this.vehicles
+            .filter((vehicle) => vehicle instanceof Truck) // Show only trucks
+            .map((truck) => ({
+              name: `${truck.vin} -- ${truck.make} ${truck.model}`,
+              value: truck.vin,
+            })),
         },
       ])
-      .then((towAnswers) => {
-        const vehicleToTow = towAnswers.vehicleToTow;
-        console.log(
-          `The truck is towing the vehicle: ${vehicleToTow.make} ${vehicleToTow.model}`
+      .then((answers: { selectedTruckVin: string }) => {
+        const selectedTruck = this.vehicles.find(
+          (vehicle) => vehicle.vin === answers.selectedTruckVin
         );
-        this.performActions(); // Return to the actions menu after towing
+
+        if (selectedTruck instanceof Truck) {
+          inquirer
+            .prompt([
+              {
+                type: "list",
+                name: "vehicleToTow",
+                message: "Select a vehicle to tow",
+                choices: this.vehicles
+                  .filter((vehicle) => vehicle !== selectedTruck) // Exclude the selected truck
+                  .map((vehicle) => ({
+                    name: `${vehicle.vin} -- ${vehicle.make} ${vehicle.model}`,
+                    value: vehicle,
+                  })),
+              },
+            ])
+            .then((towAnswers: { vehicleToTow: Car | Motorbike | Truck }) => {
+              const vehicleToTow = towAnswers.vehicleToTow;
+              console.log(
+                `The truck ${selectedTruck.make} ${selectedTruck.model} is towing the vehicle: ${vehicleToTow.make} ${vehicleToTow.model}`
+              );
+              this.performActions(); // Return to the actions menu after towing
+            });
+        } else {
+          console.log("Selected vehicle is not a truck.");
+          this.performActions();
+        }
       });
   }
 
@@ -302,7 +329,7 @@ class Cli {
               `${selectedVehicle.make} ${selectedVehicle.model} is doing a wheelie!`
             );
           } else {
-            console.log("This vehicle cannot perform a wheelie.");
+            console.log("Only Motorbikes can perform a wheelie.");
             this.performActions();
             return;
           }
