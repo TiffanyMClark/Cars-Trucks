@@ -5,7 +5,7 @@ import Car from "./Car.js";
 import Wheel from "./Wheel.js";
 import AbleToTow from "../interfaces/AbleToTow.js";
 //  Truck class should extends the Vehicle class and should implement the AbleToTow interface
-class Truck extends Vehicle {
+class Truck extends Vehicle implements AbleToTow {
   vin: string;
   color: string;
   make: string;
@@ -47,13 +47,21 @@ class Truck extends Vehicle {
     }
   }
   tow(vehicle: Truck | Motorbike | Car): void {
-    const vehicleWeight = vehicle.weight;
-    if (vehicleWeight <= this.towingCapacity) {
-      console.log(`${vehicle.make} ${vehicle.model} is being towed.`);
+    if (this instanceof Truck) {
+      if (vehicle.weight <= this.towingCapacity) {
+        console.log(
+          `The truck is towing the vehicle: ${vehicle.make} ${vehicle.model}`
+        );
+      } else {
+        console.log(
+          `The truck cannot tow the vehicle: ${vehicle.make} ${vehicle.model}. The vehicle's weight exceeds the towing capacity.`
+        );
+      }
     } else {
-      console.log(`${vehicle.make} ${vehicle.model} is too heavy to be towed.`);
+      console.log("Only trucks can tow vehicles.");
     }
   }
+
   override printDetails(): void {
     super.printDetails();
     console.log(`VIN: ${this.vin}`);
@@ -64,10 +72,7 @@ class Truck extends Vehicle {
     console.log(`Weight: ${this.weight} lbs`);
     console.log(`Top Speed: ${this.topSpeed} mph`);
     console.log(`Towing Capacity: ${this.towingCapacity} lbs`);
-    console.log(`Wheels:`);
-    this.wheels.forEach((wheel, index) => {
-      console.log(`Wheel ${index + 1}: ${wheel.toString()}`);
-    });
+
     console.log(
       `Wheel 1: ${this.wheels[0].getDiameter} inch with a ${this.wheels[0].getTireBrand} tire`
     );

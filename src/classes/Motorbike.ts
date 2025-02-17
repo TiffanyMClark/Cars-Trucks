@@ -2,7 +2,7 @@
 import Vehicle from "./Vehicle.js";
 import Wheel from "./Wheel.js";
 
-// TODO: The Motorbike class should extend the Vehicle class
+// Motorbike  extends the Vehicle class
 class Motorbike extends Vehicle {
   vin: string;
   color: string;
@@ -36,10 +36,8 @@ class Motorbike extends Vehicle {
     this.topSpeed = topSpeed;
     //  constructor checks the wheels array for 2 elements and create 2 new default Wheel objects if it does not
     if (wheels.length !== 2) {
-      this.wheels = [new Wheel(), new Wheel()];
-    } else {
-      this.wheels = wheels;
     }
+    this.wheels = wheels;
   }
   //  Implemented the wheelie method?
   // okay so that should be a void for the wheelie like the create vehicle. ${this.make and model should do that with this message.}
@@ -60,10 +58,7 @@ class Motorbike extends Vehicle {
     console.log(`Year: ${this.year}`);
     console.log(`Weight: ${this.weight} lbs`);
     console.log(`Top Speed: ${this.topSpeed} mph`);
-    console.log(`Wheels:`);
-    this.wheels.forEach((wheel, index) => {
-      console.log(`Wheel ${index + 1}: ${wheel.toString()}`);
-    });
+
     console.log(
       `Wheel 1: ${this.wheels[0].getDiameter} inch with a ${this.wheels[0].getTireBrand} tire`
     );
