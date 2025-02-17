@@ -164,6 +164,14 @@ class Cli {
         },
       ])
       .then((answers) => {
+        const frontWheel = new Wheel(
+          parseInt(answers.frontWheelDiameter),
+          answers.frontWheelBrand
+        );
+        const rearWheel = new Wheel(
+          parseInt(answers.rearWheelDiameter),
+          answers.rearWheelBrand
+        );
         const motorbike = new Motorbike(
           Cli.generateVin(),
           answers.color,
@@ -172,7 +180,7 @@ class Cli {
           parseInt(answers.year),
           parseInt(answers.weight),
           parseInt(answers.topSpeed),
-          []
+          [frontWheel, rearWheel]
         );
         this.vehicles.push(motorbike);
         this.selectedVehicleVin = motorbike.vin;
@@ -194,17 +202,12 @@ class Cli {
           })),
         },
       ])
-      .then((answers) => {
-        const selectedVehicle = answers.vehicleToTow;
-        if (selectedVehicle instanceof Truck) {
-          console.log("The truck cannot tow itself!");
-          this.performActions();
-        } else {
-          console.log(
-            `Towing the vehicle: ${selectedVehicle.make} ${selectedVehicle.model}`
-          );
-          this.performActions();
-        }
+      .then((towAnswers) => {
+        const vehicleToTow = towAnswers.vehicleToTow;
+        console.log(
+          `The truck is towing the vehicle: ${vehicleToTow.make} ${vehicleToTow.model}`
+        );
+        this.performActions(); // Return to the actions menu after towing
       });
   }
 
@@ -290,15 +293,19 @@ class Cli {
             this.findVehicleToTow();
           } else {
             console.log("Only trucks can tow vehicles.");
+            this.performActions();
           }
+          return;
         } else if (answers.action === "Can you do a wheelie?") {
           if (selectedVehicle instanceof Motorbike) {
-            console.log("Performing a wheelie!");
+            console.log(
+              `${selectedVehicle.make} ${selectedVehicle.model} is doing a wheelie!`
+            );
           } else {
             console.log("This vehicle cannot perform a wheelie.");
+            this.performActions();
+            return;
           }
-          this.startCli();
-          return;
         } else if (answers.action === "Select or create another vehicle") {
           this.startCli();
           return;
