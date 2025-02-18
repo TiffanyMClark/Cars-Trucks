@@ -232,7 +232,7 @@ class Cli {
               this.performActions(); // Return to the actions menu after towing
             });
         } else {
-          console.log("Selected vehicle is not a truck.");
+          console.log("Selected vehicle is not a truck."); // should print this when anything other than a truck is selected
           this.performActions();
         }
       });
