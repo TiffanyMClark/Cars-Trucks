@@ -6,12 +6,9 @@
 
 - [Description](#description)
 - [Installation](#installation)
-- [Contributing](#contributing)
 - [Tests](#tests)
 - [License](#license)
 - [Features](#features)
-- [Usage](#usage)
-- [Questions](#questions)
 
   ## Description
 
@@ -36,3 +33,4 @@
   ## Features
 
   it allows you to create a list of cars, trucks or motorbikes that allow you to preform small actions ex. towing or wheelie.
+  (https://drive.google.com/file/d/1PkkJdctj-1mKXTpukVf7dFwvMGcaD1vN/view?usp=sharing)
